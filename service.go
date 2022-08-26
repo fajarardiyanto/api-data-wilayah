@@ -27,19 +27,32 @@ func (c *pooling) GetRegencies(name string) ([]ResultVillages, error) {
 	name = strings.ToUpper(name)
 	re, _ := regexp.Compile(name)
 
-	for _, record := range dataCSV {
-		result := re.FindAllString(record[2], -1)
-		if len(result) != 0 {
-			c.Lock()
-			data := ResultVillages{
-				ID:         record[0],
-				DistrictID: record[1],
-				Name:       record[2],
-			}
-			c.Unlock()
+	var wg sync.WaitGroup
 
-			datas = append(datas, data)
-		}
+	for _, record := range dataCSV {
+
+		wg.Add(1)
+		go func(wg *sync.WaitGroup, record []string) {
+			defer wg.Done()
+
+			result := re.FindAllString(record[2], -1)
+			if len(result) != 0 {
+
+				c.Lock()
+				data := ResultVillages{
+					ID:         record[0],
+					DistrictID: record[1],
+					Name:       record[2],
+				}
+				c.Unlock()
+
+				c.Lock()
+				datas = append(datas, data)
+				c.Unlock()
+			}
+		}(&wg, record)
+		wg.Wait()
+
 	}
 
 	return datas, nil
@@ -85,5 +98,5 @@ func (c *pooling) GetCSV(file string) ([][]string, error) {
 		err = errs[0]
 	}
 
-	return result, nil
+	return result, err
 }
