@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/csv"
 	"io"
 	"os"
@@ -46,9 +47,14 @@ func (c *pooling) GetRegencies(name string) ([]ResultVillages, error) {
 				}
 				c.Unlock()
 
+				//c.Lock()
+				//c.MigrationDataWilayah(data)
+				//c.Unlock()
+
 				c.Lock()
 				datas = append(datas, data)
 				c.Unlock()
+
 			}
 		}(&wg, record)
 		wg.Wait()
@@ -99,4 +105,16 @@ func (c *pooling) GetCSV(file string) ([][]string, error) {
 	}
 
 	return result, err
+}
+
+func (c *pooling) MigrationDataWilayah(req ResultVillages) {
+	query := `INSERT INTO data_wilayah_regencies (id, district_id, name) VALUES (?, ?, ?);`
+
+	tx := GetDBConn().Orm().WithContext(context.Background()).Debug().
+		Exec(query, req.ID, req.DistrictID, req.Name)
+
+	if tx.Error != nil {
+		GetLogger().Error(tx.Error)
+		return
+	}
 }
