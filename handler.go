@@ -1,21 +1,18 @@
 package main
 
 import (
-	"encoding/json"
+	"github.com/fajarardiyanto/flt-go-router/interfaces"
 	"net/http"
 )
 
-func HandlerRegencies(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
+func HandlerRegencies(w http.ResponseWriter, r *http.Request) error {
+	name := interfaces.GetQuery(r, "name")
 
 	pool := NewPooling()
 	villages, err := pool.GetRegencies(name)
 	if err != nil {
-		w.WriteHeader(500)
-		json.NewEncoder(w).Encode(err.Error())
-		return
+		return err
 	}
 
-	w.WriteHeader(200)
-	json.NewEncoder(w).Encode(villages)
+	return interfaces.JSON(w, http.StatusOK, villages)
 }
