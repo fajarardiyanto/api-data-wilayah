@@ -15,6 +15,12 @@
 - [ ] Query Search (id, sub_id, postal)
 - [ ] Auto Migration DB (Mysql, Postgres, MongoDB, ElasticSearch, Firebase)
 
+## Host
+
+```text
+https://api-data-wilayah.herokuapp.com/
+```
+
 ## Path
 
 ```txt
