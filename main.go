@@ -13,7 +13,11 @@ func main() {
 	router := lib.New("v1.0.0")
 	router.Use(MiddlewareLogger(), MiddlewareError())
 
-	router.GET("/regencies", HandlerRegencies)
+	svc := NewService()
+	h := NewHandler(svc)
+
+	router.GET("/provinces", h.HandlerProvinces)
+	router.GET("/regencies", h.HandlerRegencies)
 
 	router.Run(bindAddr)
 }

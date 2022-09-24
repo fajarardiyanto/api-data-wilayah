@@ -1,7 +1,12 @@
 package main
 
 type ResultVillages struct {
-	ID         string `json:"id"`
-	DistrictID string `json:"district_id"`
+	ID         int    `json:"id"`
+	DistrictID int    `json:"district_id"`
 	Name       string `json:"name"`
+}
+
+type ResultProvinces struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }

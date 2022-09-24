@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"github.com/fajarardiyanto/flt-go-utils/parser"
 	"io"
 	"os"
 	"regexp"
@@ -9,16 +10,55 @@ import (
 	"sync"
 )
 
-type pooling struct {
+type service struct {
 	sync.Mutex
 }
 
-func NewPooling() *pooling {
-	return &pooling{}
+func NewService() ApiIndonesiaArea {
+	return &service{}
 }
 
-func (c *pooling) GetRegencies(name string) ([]ResultVillages, error) {
-	dataCSV, err := c.GetCSV("data/regencies.csv")
+func (s *service) GetProvinces(name string) ([]ResultProvinces, error) {
+	dataCSV, err := s.GetCSV("data/provinces.csv")
+	if err != nil {
+		return nil, err
+	}
+
+	var datas []ResultProvinces
+	name = strings.ToUpper(name)
+	re, _ := regexp.Compile(name)
+
+	var wg sync.WaitGroup
+
+	for _, record := range dataCSV {
+
+		wg.Add(1)
+		go func(wg *sync.WaitGroup, record []string) {
+			defer wg.Done()
+
+			result := re.FindAllString(record[1], -1)
+			if len(result) != 0 {
+				s.Lock()
+				data := ResultProvinces{
+					ID:   parser.StrToInt(record[0]),
+					Name: record[1],
+				}
+				s.Unlock()
+
+				s.Lock()
+				datas = append(datas, data)
+				s.Unlock()
+			}
+		}(&wg, record)
+		wg.Wait()
+
+	}
+
+	return datas, nil
+}
+
+func (s *service) GetRegencies(name string) ([]ResultVillages, error) {
+	dataCSV, err := s.GetCSV("data/regencies.csv")
 	if err != nil {
 		return nil, err
 	}
@@ -37,18 +77,17 @@ func (c *pooling) GetRegencies(name string) ([]ResultVillages, error) {
 
 			result := re.FindAllString(record[2], -1)
 			if len(result) != 0 {
-
-				c.Lock()
+				s.Lock()
 				data := ResultVillages{
-					ID:         record[0],
-					DistrictID: record[1],
+					ID:         parser.StrToInt(record[0]),
+					DistrictID: parser.StrToInt(record[1]),
 					Name:       record[2],
 				}
-				c.Unlock()
+				s.Unlock()
 
-				c.Lock()
+				s.Lock()
 				datas = append(datas, data)
-				c.Unlock()
+				s.Unlock()
 			}
 		}(&wg, record)
 		wg.Wait()
@@ -58,7 +97,7 @@ func (c *pooling) GetRegencies(name string) ([]ResultVillages, error) {
 	return datas, nil
 }
 
-func (c *pooling) GetCSV(file string) ([][]string, error) {
+func (s *service) GetCSV(file string) ([][]string, error) {
 	csvfile, err := os.Open(file)
 	if err != nil {
 		return nil, err
@@ -76,19 +115,19 @@ func (c *pooling) GetCSV(file string) ([][]string, error) {
 
 		record, err := rd.ReadAll()
 		if err == io.EOF {
-			c.Lock()
+			s.Lock()
 			errs = append(errs, err)
-			c.Unlock()
+			s.Unlock()
 		}
 		if err != nil {
-			c.Lock()
+			s.Lock()
 			errs = append(errs, err)
-			c.Unlock()
+			s.Unlock()
 		}
 
-		c.Lock()
+		s.Lock()
 		resChan <- record
-		c.Unlock()
+		s.Unlock()
 	}(&wg)
 
 	result := <-resChan
