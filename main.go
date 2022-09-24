@@ -18,6 +18,8 @@ func main() {
 
 	router.GET("/provinces", h.HandlerProvinces)
 	router.GET("/regencies", h.HandlerRegencies)
+	router.GET("/districts", h.HandlerDistricts)
+	router.GET("/villages", h.HandlerVillages)
 
 	router.Run(bindAddr)
 }
