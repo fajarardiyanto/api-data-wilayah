@@ -5,6 +5,11 @@ type Response struct {
 	Data  interface{} `json:"data"`
 }
 
+type Info struct {
+	Name string `json:"name"`
+	Link string `json:"link"`
+}
+
 type ResultProvinces struct {
 	ID       int      `json:"id"`
 	Name     string   `json:"name"`

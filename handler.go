@@ -13,6 +13,29 @@ func NewHandler(repo ApiIndonesiaArea) *handler {
 	return &handler{repo}
 }
 
+func (h *handler) HandlerInfo(w http.ResponseWriter, r *http.Request) error {
+	host := r.Host
+	data := []Info{
+		{
+			Name: "provinces",
+			Link: host + "/provinces",
+		},
+		{
+			Name: "regencies",
+			Link: host + "/regencies",
+		},
+		{
+			Name: "districts",
+			Link: host + "/districts",
+		},
+		{
+			Name: "villages",
+			Link: host + "/villages",
+		},
+	}
+	return interfaces.JSON(w, http.StatusOK, data)
+}
+
 func (h *handler) HandlerProvinces(w http.ResponseWriter, r *http.Request) error {
 	name := interfaces.GetQuery(r, "name")
 
