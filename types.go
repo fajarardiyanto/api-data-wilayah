@@ -1,8 +1,9 @@
 package main
 
 type Response struct {
-	Total int         `json:"total"`
-	Data  interface{} `json:"data"`
+	Total     int         `json:"total"`
+	TotalPage int         `json:"total_page,omitempty"`
+	Data      interface{} `json:"data"`
 }
 
 type Info struct {

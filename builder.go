@@ -1,9 +1,9 @@
 package main
 
 type ApiIndonesiaArea interface {
-	GetProvinces(name string) ([]ResultProvinces, error)
-	GetRegencies(string) ([]ResultRegencies, error)
-	GetDistricts(name string) ([]ResultDistricts, error)
-	GetVillages(name string) ([]ResultVillages, error)
+	GetProvinces(string, int, int) ([]ResultProvinces, int, error)
+	GetRegencies(string, int, int) ([]ResultRegencies, int, error)
+	GetDistricts(string, int, int) ([]ResultDistricts, int, error)
+	GetVillages(string, int, int) ([]ResultVillages, int, error)
 	GetCSV(string) ([][]string, error)
 }

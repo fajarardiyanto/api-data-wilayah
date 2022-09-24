@@ -19,15 +19,18 @@ func NewService() ApiIndonesiaArea {
 }
 
 // GetProvinces service get provinces
-func (s *service) GetProvinces(name string) ([]ResultProvinces, error) {
+func (s *service) GetProvinces(name string, page, offset int) ([]ResultProvinces, int, error) {
 	dataCSV, err := s.GetCSV("data/provinces.csv")
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var datas []ResultProvinces
 	name = strings.ToUpper(name)
 	re, _ := regexp.Compile(name)
+
+	start := (page - 1) * offset
+	stop := start + offset
 
 	var wg sync.WaitGroup
 
@@ -64,19 +67,30 @@ func (s *service) GetProvinces(name string) ([]ResultProvinces, error) {
 
 	}
 
-	return datas, nil
+	if stop > len(datas) {
+		stop = len(datas)
+	}
+
+	if stop != 0 {
+		return datas[start:stop], len(datas), nil
+	} else {
+		return datas, len(datas), nil
+	}
 }
 
 // GetRegencies service get regencies / cities
-func (s *service) GetRegencies(name string) ([]ResultRegencies, error) {
+func (s *service) GetRegencies(name string, page, offset int) ([]ResultRegencies, int, error) {
 	dataCSV, err := s.GetCSV("data/regencies.csv")
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var datas []ResultRegencies
 	name = strings.ToUpper(name)
 	re, _ := regexp.Compile(name)
+
+	start := (page - 1) * offset
+	stop := start + offset
 
 	var wg sync.WaitGroup
 
@@ -114,19 +128,30 @@ func (s *service) GetRegencies(name string) ([]ResultRegencies, error) {
 
 	}
 
-	return datas, nil
+	if stop > len(datas) {
+		stop = len(datas)
+	}
+
+	if stop != 0 {
+		return datas[start:stop], len(datas), nil
+	} else {
+		return datas, len(datas), nil
+	}
 }
 
 // GetDistricts service get regencies / cities
-func (s *service) GetDistricts(name string) ([]ResultDistricts, error) {
+func (s *service) GetDistricts(name string, page, offset int) ([]ResultDistricts, int, error) {
 	dataCSV, err := s.GetCSV("data/districts.csv")
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var datas []ResultDistricts
 	name = strings.ToUpper(name)
 	re, _ := regexp.Compile(name)
+
+	start := (page - 1) * offset
+	stop := start + offset
 
 	var wg sync.WaitGroup
 
@@ -164,19 +189,30 @@ func (s *service) GetDistricts(name string) ([]ResultDistricts, error) {
 
 	}
 
-	return datas, nil
+	if stop > len(datas) {
+		stop = len(datas)
+	}
+
+	if stop != 0 {
+		return datas[start:stop], len(datas), nil
+	} else {
+		return datas, len(datas), nil
+	}
 }
 
 // GetVillages service get regencies / cities
-func (s *service) GetVillages(name string) ([]ResultVillages, error) {
+func (s *service) GetVillages(name string, page, offset int) ([]ResultVillages, int, error) {
 	dataCSV, err := s.GetCSV("data/villages.csv")
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var datas []ResultVillages
 	name = strings.ToUpper(name)
 	re, _ := regexp.Compile(name)
+
+	start := (page - 1) * offset
+	stop := start + offset
 
 	var wg sync.WaitGroup
 
@@ -212,7 +248,15 @@ func (s *service) GetVillages(name string) ([]ResultVillages, error) {
 
 	}
 
-	return datas, nil
+	if stop > len(datas) {
+		stop = len(datas)
+	}
+
+	if stop != 0 {
+		return datas[start:stop], len(datas), nil
+	} else {
+		return datas, len(datas), nil
+	}
 }
 
 func (s *service) GetCSV(file string) ([][]string, error) {

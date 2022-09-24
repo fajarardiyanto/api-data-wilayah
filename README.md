@@ -30,7 +30,11 @@ https://api-data-wilayah.herokuapp.com/
 [GET]   /villages
 
 Search :
-    param ?name=
+    ?name=
+    
+Pagaination :
+    &page=
+    &offset=
 ```
 
 ## Response
@@ -38,6 +42,7 @@ Search :
 ```json
 {
   "total": 34,
+  "total_page": 4,
   "data": [
     {
       "id": 11,

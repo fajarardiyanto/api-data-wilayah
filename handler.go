@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/fajarardiyanto/flt-go-router/interfaces"
+	"math"
 	"net/http"
 )
 
@@ -37,57 +38,85 @@ func (h *handler) HandlerInfo(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (h *handler) HandlerProvinces(w http.ResponseWriter, r *http.Request) error {
-	name := interfaces.GetQuery(r, "name")
+	page := GetQueryPage(r)
+	offset := GetQueryOffset(r)
 
-	prov, err := h.repo.GetProvinces(name)
+	prov, total, err := h.repo.GetProvinces(GetQueryName(r), page, offset)
 	if err != nil {
 		return err
 	}
 
+	var totalPage int
+	if page != 0 {
+		totalPage = int(math.Ceil(float64(total) / float64(offset)))
+	}
+
 	return interfaces.JSON(w, http.StatusOK, Response{
-		Total: len(prov),
-		Data:  prov,
+		Total:     total,
+		TotalPage: totalPage,
+		Data:      prov,
 	})
 }
 
 func (h *handler) HandlerRegencies(w http.ResponseWriter, r *http.Request) error {
-	name := interfaces.GetQuery(r, "name")
+	page := GetQueryPage(r)
+	offset := GetQueryOffset(r)
 
-	regencies, err := h.repo.GetRegencies(name)
+	regencies, total, err := h.repo.GetRegencies(GetQueryName(r), page, offset)
 	if err != nil {
 		return err
 	}
 
+	var totalPage int
+	if page != 0 {
+		totalPage = int(math.Ceil(float64(total) / float64(offset)))
+	}
+
 	return interfaces.JSON(w, http.StatusOK, Response{
-		Total: len(regencies),
-		Data:  regencies,
+		Total:     total,
+		TotalPage: totalPage,
+		Data:      regencies,
 	})
 }
 
 func (h *handler) HandlerDistricts(w http.ResponseWriter, r *http.Request) error {
-	name := interfaces.GetQuery(r, "name")
+	page := GetQueryPage(r)
+	offset := GetQueryOffset(r)
 
-	district, err := h.repo.GetDistricts(name)
+	district, total, err := h.repo.GetDistricts(GetQueryName(r), page, offset)
 	if err != nil {
 		return err
 	}
 
+	var totalPage int
+	if page != 0 {
+		totalPage = int(math.Ceil(float64(total) / float64(offset)))
+	}
+
 	return interfaces.JSON(w, http.StatusOK, Response{
-		Total: len(district),
-		Data:  district,
+		Total:     total,
+		TotalPage: totalPage,
+		Data:      district,
 	})
 }
 
 func (h *handler) HandlerVillages(w http.ResponseWriter, r *http.Request) error {
-	name := interfaces.GetQuery(r, "name")
+	page := GetQueryPage(r)
+	offset := GetQueryOffset(r)
 
-	village, err := h.repo.GetVillages(name)
+	village, total, err := h.repo.GetVillages(GetQueryName(r), page, offset)
 	if err != nil {
 		return err
 	}
 
+	var totalPage int
+	if page != 0 {
+		totalPage = int(math.Ceil(float64(total) / float64(offset)))
+	}
+
 	return interfaces.JSON(w, http.StatusOK, Response{
-		Total: len(village),
-		Data:  village,
+		Total:     total,
+		TotalPage: totalPage,
+		Data:      village,
 	})
 }
