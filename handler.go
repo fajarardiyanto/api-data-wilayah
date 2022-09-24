@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/fajarardiyanto/flt-go-router/interfaces"
-	"math"
 	"net/http"
 )
 
@@ -41,14 +40,9 @@ func (h *handler) HandlerProvinces(w http.ResponseWriter, r *http.Request) error
 	page := GetQueryPage(r)
 	offset := GetQueryOffset(r)
 
-	prov, total, err := h.repo.GetProvinces(GetQueryName(r), page, offset)
+	prov, total, totalPage, err := h.repo.GetProvinces(GetQueryName(r), page, offset)
 	if err != nil {
 		return err
-	}
-
-	var totalPage int
-	if page != 0 {
-		totalPage = int(math.Ceil(float64(total) / float64(offset)))
 	}
 
 	return interfaces.JSON(w, http.StatusOK, Response{
@@ -62,14 +56,9 @@ func (h *handler) HandlerRegencies(w http.ResponseWriter, r *http.Request) error
 	page := GetQueryPage(r)
 	offset := GetQueryOffset(r)
 
-	regencies, total, err := h.repo.GetRegencies(GetQueryName(r), page, offset)
+	regencies, total, totalPage, err := h.repo.GetRegencies(GetQueryName(r), page, offset)
 	if err != nil {
 		return err
-	}
-
-	var totalPage int
-	if page != 0 {
-		totalPage = int(math.Ceil(float64(total) / float64(offset)))
 	}
 
 	return interfaces.JSON(w, http.StatusOK, Response{
@@ -83,14 +72,9 @@ func (h *handler) HandlerDistricts(w http.ResponseWriter, r *http.Request) error
 	page := GetQueryPage(r)
 	offset := GetQueryOffset(r)
 
-	district, total, err := h.repo.GetDistricts(GetQueryName(r), page, offset)
+	district, total, totalPage, err := h.repo.GetDistricts(GetQueryName(r), page, offset)
 	if err != nil {
 		return err
-	}
-
-	var totalPage int
-	if page != 0 {
-		totalPage = int(math.Ceil(float64(total) / float64(offset)))
 	}
 
 	return interfaces.JSON(w, http.StatusOK, Response{
@@ -104,14 +88,9 @@ func (h *handler) HandlerVillages(w http.ResponseWriter, r *http.Request) error 
 	page := GetQueryPage(r)
 	offset := GetQueryOffset(r)
 
-	village, total, err := h.repo.GetVillages(GetQueryName(r), page, offset)
+	village, total, totalPage, err := h.repo.GetVillages(GetQueryName(r), page, offset)
 	if err != nil {
 		return err
-	}
-
-	var totalPage int
-	if page != 0 {
-		totalPage = int(math.Ceil(float64(total) / float64(offset)))
 	}
 
 	return interfaces.JSON(w, http.StatusOK, Response{

@@ -39,7 +39,7 @@ type ResultVillages struct {
 }
 
 type MetaData struct {
-	Latitude  string   `json:"latitude"`
-	Longitude string   `json:"longitude"`
+	Latitude  string   `json:"latitude,omitempty"`
+	Longitude string   `json:"longitude,omitempty"`
 	Postal    []string `json:"postal"`
 }

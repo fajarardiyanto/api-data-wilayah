@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"github.com/fajarardiyanto/flt-go-utils/parser"
 	"io"
+	"math"
 	"os"
 	"regexp"
 	"strings"
@@ -19,13 +20,13 @@ func NewService() ApiIndonesiaArea {
 }
 
 // GetProvinces service get provinces
-func (s *service) GetProvinces(name string, page, offset int) ([]ResultProvinces, int, error) {
+func (s *service) GetProvinces(name string, page, offset int) ([]ResultProvinces, int, int, error) {
 	dataCSV, err := s.GetCSV("data/provinces.csv")
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 
-	var datas []ResultProvinces
+	datas := make([]ResultProvinces, 0)
 	name = strings.ToUpper(name)
 	re, _ := regexp.Compile(name)
 
@@ -71,18 +72,23 @@ func (s *service) GetProvinces(name string, page, offset int) ([]ResultProvinces
 		stop = len(datas)
 	}
 
+	totalPage := int(math.Ceil(float64(len(datas)) / float64(offset)))
+
 	if stop != 0 {
-		return datas[start:stop], len(datas), nil
+		if page > totalPage {
+			return []ResultProvinces{}, 0, 0, nil
+		}
+		return datas[start:stop], len(datas), totalPage, nil
 	} else {
-		return datas, len(datas), nil
+		return datas, len(datas), 0, nil
 	}
 }
 
 // GetRegencies service get regencies / cities
-func (s *service) GetRegencies(name string, page, offset int) ([]ResultRegencies, int, error) {
+func (s *service) GetRegencies(name string, page, offset int) ([]ResultRegencies, int, int, error) {
 	dataCSV, err := s.GetCSV("data/regencies.csv")
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 
 	var datas []ResultRegencies
@@ -132,18 +138,23 @@ func (s *service) GetRegencies(name string, page, offset int) ([]ResultRegencies
 		stop = len(datas)
 	}
 
+	totalPage := int(math.Ceil(float64(len(datas)) / float64(offset)))
+
 	if stop != 0 {
-		return datas[start:stop], len(datas), nil
+		if page > totalPage {
+			return []ResultRegencies{}, 0, 0, nil
+		}
+		return datas[start:stop], len(datas), totalPage, nil
 	} else {
-		return datas, len(datas), nil
+		return datas, len(datas), 0, nil
 	}
 }
 
 // GetDistricts service get regencies / cities
-func (s *service) GetDistricts(name string, page, offset int) ([]ResultDistricts, int, error) {
+func (s *service) GetDistricts(name string, page, offset int) ([]ResultDistricts, int, int, error) {
 	dataCSV, err := s.GetCSV("data/districts.csv")
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 
 	var datas []ResultDistricts
@@ -193,21 +204,26 @@ func (s *service) GetDistricts(name string, page, offset int) ([]ResultDistricts
 		stop = len(datas)
 	}
 
+	totalPage := int(math.Ceil(float64(len(datas)) / float64(offset)))
+
 	if stop != 0 {
-		return datas[start:stop], len(datas), nil
+		if page > totalPage {
+			return []ResultDistricts{}, 0, 0, nil
+		}
+		return datas[start:stop], len(datas), totalPage, nil
 	} else {
-		return datas, len(datas), nil
+		return datas[:1000], len(datas), 0, nil
 	}
 }
 
 // GetVillages service get regencies / cities
-func (s *service) GetVillages(name string, page, offset int) ([]ResultVillages, int, error) {
+func (s *service) GetVillages(name string, page, offset int) ([]ResultVillages, int, int, error) {
 	dataCSV, err := s.GetCSV("data/villages.csv")
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 
-	var datas []ResultVillages
+	datas := make([]ResultVillages, 0)
 	name = strings.ToUpper(name)
 	re, _ := regexp.Compile(name)
 
@@ -252,10 +268,15 @@ func (s *service) GetVillages(name string, page, offset int) ([]ResultVillages, 
 		stop = len(datas)
 	}
 
+	totalPage := int(math.Ceil(float64(len(datas)) / float64(offset)))
+
 	if stop != 0 {
-		return datas[start:stop], len(datas), nil
+		if page > totalPage {
+			return []ResultVillages{}, 0, 0, nil
+		}
+		return datas[start:stop], len(datas), totalPage, nil
 	} else {
-		return datas, len(datas), nil
+		return datas[:1000], len(datas), 0, nil
 	}
 }
 
