@@ -282,7 +282,7 @@ func (s *service) GetVillages(name string, districtsID, page, offset int) ([]Res
 		}
 		return datas[start:stop], len(datas), totalPage, nil
 	} else {
-		return datas[:1000], len(datas), 0, nil
+		return datas, len(datas), 0, nil
 	}
 }
 
