@@ -56,7 +56,7 @@ func (h *handler) HandlerRegencies(w http.ResponseWriter, r *http.Request) error
 	page := GetQueryPage(r)
 	offset := GetQueryOffset(r)
 
-	regencies, total, totalPage, err := h.repo.GetRegencies(GetQueryName(r), page, offset)
+	regencies, total, totalPage, err := h.repo.GetRegencies(GetQueryName(r), GetQueryProvID(r), page, offset)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (h *handler) HandlerDistricts(w http.ResponseWriter, r *http.Request) error
 	page := GetQueryPage(r)
 	offset := GetQueryOffset(r)
 
-	district, total, totalPage, err := h.repo.GetDistricts(GetQueryName(r), page, offset)
+	district, total, totalPage, err := h.repo.GetDistricts(GetQueryName(r), GetQueryRegenciesID(r), page, offset)
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func (h *handler) HandlerVillages(w http.ResponseWriter, r *http.Request) error 
 	page := GetQueryPage(r)
 	offset := GetQueryOffset(r)
 
-	village, total, totalPage, err := h.repo.GetVillages(GetQueryName(r), page, offset)
+	village, total, totalPage, err := h.repo.GetVillages(GetQueryName(r), GetQueryDistrictID(r), page, offset)
 	if err != nil {
 		return err
 	}
