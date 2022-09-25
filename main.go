@@ -12,7 +12,7 @@ func main() {
 	//bindAddr := os.Getenv("PORT")
 
 	router := lib.New("v1.0.0")
-	router.Use(MiddlewareLogger(), MiddlewareError())
+	router.Use(MiddlewareCors(), MiddlewareError())
 
 	svc := NewService()
 	h := NewHandler(svc)

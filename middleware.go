@@ -6,9 +6,10 @@ import (
 	"net/http"
 )
 
-func MiddlewareLogger() interfaces.MiddlewareFunc {
+func MiddlewareCors() interfaces.MiddlewareFunc {
 	return func(next interfaces.Handler) interfaces.Handler {
 		return func(w http.ResponseWriter, r *http.Request) error {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
 			return next(w, r)
 		}
 	}
