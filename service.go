@@ -108,24 +108,28 @@ func (s *service) GetRegencies(name string, provID, page, offset int) ([]ResultR
 
 			result := re.FindAllString(record[2], -1)
 			if len(result) != 0 {
-				if provID == parser.StrToInt(record[1]) {
-					s.Lock()
-					postal := strings.Split(record[5], ",")
-					s.Unlock()
+				s.Lock()
+				postal := strings.Split(record[5], ",")
+				s.Unlock()
 
-					s.Lock()
-					data := ResultRegencies{
-						ID:     parser.StrToInt(record[0]),
-						ProvID: parser.StrToInt(record[1]),
-						Name:   record[2],
-						MetaData: MetaData{
-							Latitude:  record[3],
-							Longitude: record[4],
-							Postal:    postal,
-						},
-					}
-					s.Unlock()
+				s.Lock()
+				data := ResultRegencies{
+					ID:     parser.StrToInt(record[0]),
+					ProvID: parser.StrToInt(record[1]),
+					Name:   record[2],
+					MetaData: MetaData{
+						Latitude:  record[3],
+						Longitude: record[4],
+						Postal:    postal,
+					},
+				}
+				s.Unlock()
 
+				if provID == 0 {
+					s.Lock()
+					datas = append(datas, data)
+					s.Unlock()
+				} else if provID == parser.StrToInt(record[1]) {
 					s.Lock()
 					datas = append(datas, data)
 					s.Unlock()
@@ -176,24 +180,28 @@ func (s *service) GetDistricts(name string, regenciesID, page, offset int) ([]Re
 
 			result := re.FindAllString(record[2], -1)
 			if len(result) != 0 {
-				if regenciesID == parser.StrToInt(record[1]) {
-					s.Lock()
-					postal := strings.Split(record[5], ",")
-					s.Unlock()
+				s.Lock()
+				postal := strings.Split(record[5], ",")
+				s.Unlock()
 
-					s.Lock()
-					data := ResultDistricts{
-						ID:          parser.StrToInt(record[0]),
-						RegenciesID: parser.StrToInt(record[1]),
-						Name:        record[2],
-						MetaData: MetaData{
-							Latitude:  record[3],
-							Longitude: record[4],
-							Postal:    postal,
-						},
-					}
-					s.Unlock()
+				s.Lock()
+				data := ResultDistricts{
+					ID:          parser.StrToInt(record[0]),
+					RegenciesID: parser.StrToInt(record[1]),
+					Name:        record[2],
+					MetaData: MetaData{
+						Latitude:  record[3],
+						Longitude: record[4],
+						Postal:    postal,
+					},
+				}
+				s.Unlock()
 
+				if regenciesID == 0 {
+					s.Lock()
+					datas = append(datas, data)
+					s.Unlock()
+				} else if regenciesID == parser.StrToInt(record[1]) {
 					s.Lock()
 					datas = append(datas, data)
 					s.Unlock()
@@ -244,22 +252,26 @@ func (s *service) GetVillages(name string, districtsID, page, offset int) ([]Res
 
 			result := re.FindAllString(record[2], -1)
 			if len(result) != 0 {
-				if districtsID == parser.StrToInt(record[1]) {
-					s.Lock()
-					postal := strings.Split(record[5], ",")
-					s.Unlock()
+				s.Lock()
+				postal := strings.Split(record[5], ",")
+				s.Unlock()
 
-					s.Lock()
-					data := ResultVillages{
-						ID:         parser.StrToInt(record[0]),
-						DistrictId: parser.StrToInt(record[1]),
-						Name:       record[2],
-						MetaData: MetaData{
-							Postal: postal,
-						},
-					}
-					s.Unlock()
+				s.Lock()
+				data := ResultVillages{
+					ID:         parser.StrToInt(record[0]),
+					DistrictId: parser.StrToInt(record[1]),
+					Name:       record[2],
+					MetaData: MetaData{
+						Postal: postal,
+					},
+				}
+				s.Unlock()
 
+				if districtsID == 0 {
+					s.Lock()
+					datas = append(datas, data)
+					s.Unlock()
+				} else if districtsID == parser.StrToInt(record[1]) {
 					s.Lock()
 					datas = append(datas, data)
 					s.Unlock()
